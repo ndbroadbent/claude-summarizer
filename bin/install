@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Install (or reinstall) the two LaunchAgents: the hourly summary run and the web UI on http://localhost:8790.
+set -euo pipefail
+
+REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+# claude and herdr live in ~/.local/bin; launchd's default PATH doesn't have it.
+JOB_PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+mkdir -p "$HOME/Library/LaunchAgents" "$HOME/Library/Logs" "$HOME/.local/bin"
+ln -sf "$REPO_DIR/bin/claude-summarizer" "$HOME/.local/bin/claude-summarizer"
+
+for label in com.ndbroadbent.claude-summarizer com.ndbroadbent.claude-summarizer-web; do
+  plist="$HOME/Library/LaunchAgents/$label.plist"
+  sed -e "s#__REPO_DIR__#$REPO_DIR#g" -e "s#__HOME__#$HOME#g" -e "s#__PATH__#$JOB_PATH#g" \
+    "$REPO_DIR/launchd/$label.plist" >"$plist"
+  plutil -lint "$plist" >/dev/null
+  launchctl bootout "gui/$(id -u)/$label" 2>/dev/null || true
+  launchctl bootstrap "gui/$(id -u)" "$plist"
+done
+echo "Installed: hourly run (log ~/Library/Logs/claude-summarizer.log), web UI http://localhost:8790"

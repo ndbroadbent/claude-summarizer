@@ -1,0 +1,4 @@
+#!/bin/bash
+# Runs the claude_summarizer package with the Python that launchd's plist (or your shell) provides.
+DIR="$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)"
+exec "${CLAUDE_SUMMARIZER_PYTHON:-python3}" -I -c 'import sys; sys.path.insert(0, sys.argv[1]); from claude_summarizer.cli import main; main(sys.argv[2:])' "$DIR" "$@"
