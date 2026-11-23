@@ -1,5 +1,11 @@
 # claude-summarizer
 
+> **Archived (23 Nov 2026).** claude-summarizer now lives on as the session summaries in
+> [Quietdeck](https://github.com/QuietdeckAI/quietdeck): the same prompts, filter and limits, running inside the
+> Quietdeck node, triggered when a session goes idle rather than hourly, with the summaries kept on the deck. Coming
+> from claude-summarizer, `quietdeck-node import-summaries <vault>` brings your history across. This repository is
+> no longer maintained.
+
 Rolling, tiered summaries of every Claude Code (and Codex) session on your Mac: what each one is for, what it did
 recently and what it's waiting on. For people who run many long-lived agent sessions at once and lose track of which
 one was doing what.
